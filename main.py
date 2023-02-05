@@ -1,110 +1,104 @@
 from re         import findall
 from os         import system
-from time       import sleep
+from bs4        import BeautifulSoup
+from time       import sleep, time
 from httpx      import get
 from random     import choice
-from threading  import Thread, active_count
+from threading  import Thread, active_count, Timer
 from colorama   import Fore
 
 class Scraper:
-    def __init__(self):
+    def __init__(self, threads: int = 70):
         self.proxies    = open("proxies.txt", "r").read().splitlines()
+        self.threads    = threads
+        self.time       = time()
         self.invites    = []
         self.valid      = []
-        self.categories = [
-            "gaming",
-            "streamer",
-            "programming",
-            "community",
-            "anime",
-            "roleplay",
-            "social",
-            "nsfw",
-            "minecraft",
-            "chill",
-            "music",
-            "roblox",
-            "nft",
-            "games",
-            "furry",
-            "crypto",
-            "art",
-            "hangout",
-        ]
+        self.valid      = 0
+        self.invalid    = 0
+        self.links      = []
+        
+    def checkinvite(self, invite):
+        try:
+            headers = {
+                "authority"          : "discord.com",
+                "accept"             : "*/*",
+                "accept-language"    : "en-US;q=0.8,en;q=0.7",
+                "content-type"       : "application/json",
+                "pragma"             : "no-cache",
+                "sec-ch-ua"          : '"Chromium";v="108", "Google Chrome";v="108", "Not;A=Brand";v="99"',
+                "sec-ch-ua-mobile"   : "?0",
+                "sec-ch-ua-platform" : '"Windows"',
+                "sec-fetch-dest"     : "empty",
+                "sec-fetch-mode"     : "cors",
+                "sec-fetch-site"     : "same-origin",
+                "user-agent"         : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+            }
+            data = {
+                "with_expiration": True,
+                "inputValue": invite,
+                "with_counts": True,
+            }
+            req = get(
+                f"https://discord.com/api/v9/invites/{invite}",
+                headers=headers,
+                params=data,
+                proxies="http://" + choice(self.proxies),
+            )
+            if req.status_code == 404:
+                print(  f"[{Fore.RED}-{Fore.RESET}] discord.gg/{invite}")
+                self.invalid += 1
+            else:
+                print(f"[{Fore.GREEN}+{Fore.RESET}] discord.gg/{invite}")
+                self.valid += 1
+                open("invites.txt", "a").write(f"discord.gg/{invite}\n")
+        except Exception as e:
+            print(f"[{Fore.RED}-{Fore.RESET}] {e}")
+                
+    def getinvites(self, endpoint: str):
+        try:
+            res = get(f"https://discadia.com{str(endpoint)}").text
+            invite = findall(r"discord\.com\/invite\/\w+|discordapp\.com\/invite\/\w+|discord\.gg\/\w+", res)[0].split("/")[-1]
+            
+            if invite in self.invites:
+                return
+            
+            self.invites.append(invite)
+            self.checkinvite(invite)
+            
+        except Exception as e:
+            print(f"[{Fore.RED}-{Fore.RESET}] {e}")
 
-    def checkinvite(self, url):
-        while True:
-            try:
-                invite = url.split("/")[-1]
 
-                headers = {
-                    "authority"          : "discord.com",
-                    "accept"             : "*/*",
-                    "accept-language"    : "en-US;q=0.8,en;q=0.7",
-                    "content-type"       : "application/json",
-                    "pragma"             : "no-cache",
-                    "sec-ch-ua"          : '"Chromium";v="108", "Google Chrome";v="108", "Not;A=Brand";v="99"',
-                    "sec-ch-ua-mobile"   : "?0",
-                    "sec-ch-ua-platform" : '"Windows"',
-                    "sec-fetch-dest"     : "empty",
-                    "sec-fetch-mode"     : "cors",
-                    "sec-fetch-site"     : "same-origin",
-                    "user-agent"         : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
-                }
+    def getlinks(self, page: str):
+        self.title()
+        try:
+            res = get(f"https://discadia.com/?page={page}").text
+            soup = BeautifulSoup(res, "html.parser")
+            
+            links = soup.find_all("a", {"class": "server-join-button flex group px-2.5 py-1 space-x-1 bg-green-700/50 border border-green-600 rounded-lg hover:bg-green-700/75 hover:shadow-xl"})
+            
+            for link in links:
+                if link["href"] in self.links:
+                    break
+                self.links.append(link["href"])
+                self.getinvites(link["href"])
+        except Exception as e:
+            print(f"[{Fore.RED}-{Fore.RESET}] {e}")
 
-                data = {
-                    "with_expiration": True,
-                    "inputValue": invite,
-                    "with_counts": True,
-                }
 
-                req = get(
-                    f"https://discord.com/api/v9/invites/{invite}",
-                    headers=headers,
-                    params=data,
-                    proxies="http://" + choice(self.proxies),
-                )
-                if req.status_code == 404:
-                    print(f"[{Fore.RED}-{Fore.RESET}] {invite}")
-                else:
-                    print(f"[{Fore.GREEN}+{Fore.RESET}] {invite}")
-                    self.valid.append(invite)
-                break
-            except:
-                pass
-
-    def getinvites(self, category):
-        res = get(f"https://search.discordservers.com/?size=250&from=0&keyword={category}").text
-
-        found_invites = findall(r"discord\.com\/invite\/\w+|discord\.gg\/\w+", res)
-        self.invites.extend(found_invites)
-
-        print(f"[{Fore.GREEN}+{Fore.RESET}] Scraped {len(found_invites)} invites")
-
-    def waitfrothreads(self):
-        while active_count() > 1:
-            sleep(0.1)
+    def title(self):
+        system(f"title [Discord Invite Scraper] ^| By Kian#2054 ^| Valid: {self.valid} ^| Invalid: {self.invalid} ^| Threads: {active_count() - 1} ^| Elapsed: {round(time() - self.time, 2)}s")
+        Timer(0.1, self.title).start()
 
     def start(self):
-        for category in self.categories:
-            Thread(target=self.getinvites, args=(category,)).start()
-
-        self.waitfrothreads()
-
-        self.invites = list(set(self.invites))
-        print(f"[{Fore.CYAN}!{Fore.RESET}] Checking {len(self.invites)} invites...")
-
-
-        for invite in self.invites:
-            Thread(target=self.checkinvite, args=(invite,)).start()
-
-        self.waitfrothreads()
-
-        print(f"[{Fore.GREEN}+{Fore.RESET}] Found {len(self.valid)} valid invites")
-        with open("valid.txt", "w") as f:
-            f.write("\n".join(self.valid))
-
+        for page in range(1, 1600):
+            while active_count() > self.threads:
+                sleep(0.1)
+            
+            Thread(target=self.getlinks, args=(page,)).start()
+        
 
 if __name__ == "__main__":
-    system('naiK yb - reparcS etivnI eltit && slc'[::-1])
+    system("cls")
     Scraper().start()
