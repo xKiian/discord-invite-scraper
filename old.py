@@ -8,7 +8,7 @@ from colorama   import Fore
 
 class Scraper:
     def __init__(self):
-        self.proxies    = open("proxies.txt", "r").read().splitlines()
+        self.proxies    = open("proxies.txt", "r").read().splitlines()                                                                                                                                                   #xKian
         self.invites    = []
         self.valid      = []
         self.categories = [

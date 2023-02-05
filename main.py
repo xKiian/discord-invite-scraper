@@ -14,7 +14,7 @@ class Scraper:
         self.time       = time()
         self.invites    = []
         self.valid      = []
-        self.valid      = 0
+        self.valid      = 0                                                                                                                                                                                                                    #xKian
         self.invalid    = 0
         self.links      = []
         

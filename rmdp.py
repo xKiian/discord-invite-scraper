@@ -1,4 +1,4 @@
-import time
+#removes every duplicate line in a file
 def removedupes(file):
     
     with open(file, 'r') as f:
@@ -11,4 +11,4 @@ def removedupes(file):
         f.writelines(lines)
 
     print(f"removed {b4 - len(lines)} duplicates")
-removedupes("t.txt")
+removedupes("invites.txt")
