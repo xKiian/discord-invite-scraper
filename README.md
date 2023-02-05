@@ -10,10 +10,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/languages/top/sfx2me/richio.io-bot?style=flat-square"> </a>
-  <img src="https://img.shields.io/github/last-commit/sfx2me/richio.io-bot?style=flat-square"> </a>
-  <img src="https://img.shields.io/github/stars/sfx2me/richio.io-bot?color=7F9DE0&label=Stars&style=flat-square"> </a>
-  <img src="https://img.shields.io/github/forks/sfx2me/richio.io-bot?color=7F9DE0&label=Forks&style=flat-square"> </a>
+  <img src="https://img.shields.io/github/languages/top/sfx2me/discord-invite-scraper?style=flat-square"> </a>
+  <img src="https://img.shields.io/github/last-commit/sfx2me/discord-invite-scraper?style=flat-square"> </a>
+  <img src="https://img.shields.io/github/stars/sfx2me/discord-invite-scraper?color=7F9DE0&label=Stars&style=flat-square"> </a>
+  <img src="https://img.shields.io/github/forks/sfx2me/discord-invite-scraper?color=7F9DE0&label=Forks&style=flat-square"> </a>
 </p>
 
 <h4 align="center">
@@ -24,8 +24,8 @@
 
 ## :fire: Features
 ```sh-session
-✔ Fastest Spammer
-✔ Proxyless
+✔ One of the fastest public invite scraper
+✔ Updating title
 ✔ Clean Code (kinda)
 ✔ Easy to use
 ```
@@ -42,15 +42,14 @@ https://user-images.githubusercontent.com/88455386/213765669-95a53a14-f0eb-4445-
 ```sh-session
 > download zip file
 > install requirements
-> run main.py
-> input code or link
+> run main.py or old.py
 > Enjoy!
 ```
 
 ## 🎉・Upcoming/enhancements
 ```sh-session
 
-- Chat spammer
+- idk lol (top.gg scraper will be private)
 ```
 
 
@@ -67,7 +66,7 @@ This project is licensed under the GPL General Public License v3.0 License
 
 ```diff
 
-v1 ⋮ 2023-01-20
+v1 ⋮ 2023-02-05
 + Added Main Script
 + Cleaned up Code
 ```
