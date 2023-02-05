@@ -57,7 +57,7 @@ class Scraper:
                 
     def getinvites(self, endpoint: str):
         try:
-            res = get(f"https://discadia.com{str(endpoint)}").text
+            res = get(f"https://discadia.com{endpoint}").text
             invite = findall(r"discord\.com\/invite\/\w+|discordapp\.com\/invite\/\w+|discord\.gg\/\w+", res)[0].split("/")[-1]
             
             if invite in self.invites:
