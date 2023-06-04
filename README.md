@@ -10,10 +10,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/languages/top/sfx2me/discord-invite-scraper?style=flat-square"> </a>
-  <img src="https://img.shields.io/github/last-commit/sfx2me/discord-invite-scraper?style=flat-square"> </a>
-  <img src="https://img.shields.io/github/stars/sfx2me/discord-invite-scraper?color=7F9DE0&label=Stars&style=flat-square"> </a>
-  <img src="https://img.shields.io/github/forks/sfx2me/discord-invite-scraper?color=7F9DE0&label=Forks&style=flat-square"> </a>
+  <img src="https://img.shields.io/github/languages/top/xKiian/discord-invite-scraper?style=flat-square"> </a>
+  <img src="https://img.shields.io/github/last-commit/xKiian/discord-invite-scraper?style=flat-square"> </a>
+  <img src="https://img.shields.io/github/stars/xKiian/discord-invite-scraper?color=7F9DE0&label=Stars&style=flat-square"> </a>
+  <img src="https://img.shields.io/github/forks/xKiian/discord-invite-scraper?color=7F9DE0&label=Forks&style=flat-square"> </a>
 </p>
 
 <h4 align="center">
